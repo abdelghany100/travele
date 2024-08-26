@@ -139,7 +139,7 @@ module.exports.deletePostCtrl = catchAsyncErrors(async (req, res, next) => {
 
 /**-------------------------------------
  * @desc   Update post
- * @router /api/posts/:id
+ * @router /api/v1/posts/:id
  * @method PUT
  * @access private (only  owner of the post)
  -------------------------------------*/
