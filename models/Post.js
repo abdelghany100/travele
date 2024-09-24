@@ -26,10 +26,16 @@ const PostSchema = new mongoose.Schema(
 
     tags: { type: [String], default: [] },
     image: {
-      type: Object,
-      default: {
-        url: "",
-      },
+      type: [
+        {
+          url: {
+            type: String,
+            required: true,
+            trim: true,
+          },
+        },
+      ],
+      default: [],
     },
   },
   {

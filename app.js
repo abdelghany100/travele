@@ -32,16 +32,17 @@ app.use(express.json());
 // Routes
 app.use("/api/v1/auth", require("./routes/authRoute"));
 app.use("/api/v1/posts", require("./routes/postRoute"));
+app.use("/api/v1/package", require("./routes/packageRoute"));
 app.use("/api/v1/comments", require("./routes/commentRoute"));
 
 
 
 app.use(notFound);
 
-app.use(errorHandler);
+app.use(errorHandler); 
 
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev"));
+  app.use(morgan("dev")); 
 }
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {

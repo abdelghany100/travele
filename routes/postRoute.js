@@ -9,7 +9,7 @@ const {
   updatePostCtr,
   updatePostImageCtr,
 } = require("../controller/postController");
-const photoUpload = require("../middlewares/photoUpload");
+const {photoUpload} = require("../middlewares/photoUpload");
 const validateObjectid = require("../middlewares/validateObjectid");
 const {
   verifyToken,
@@ -19,18 +19,17 @@ const {
 // /api/posts
 router
   .route("/")
-  .post(verifyTokenAndAdmin, photoUpload.single("image"), createPostCtrl)
-  .get(verifyToken, getAllPostCtrl)
-
+  .post( verifyTokenAndAdmin, photoUpload.array("images", 10), createPostCtrl)
+  .get(getAllPostCtrl)
 
 router
   .route("/:id")
-  .get(validateObjectid, verifyToken, getSinglePostsCtrl)
-  .delete(validateObjectid, verifyTokenAndAdmin , deletePostCtrl )
-  .patch(validateObjectid, verifyTokenAndAdmin , updatePostCtr )
+  .get(validateObjectid, getSinglePostsCtrl)
+  .delete(validateObjectid ,verifyTokenAndAdmin ,deletePostCtrl )
+  .patch(validateObjectid , verifyTokenAndAdmin ,updatePostCtr )
 
 router.route("/update-image/:id")
-.patch(verifyTokenAndAdmin, photoUpload.single("image"), updatePostImageCtr)
+.patch(verifyTokenAndAdmin, photoUpload.array("images", 10), updatePostImageCtr)
 
 
 module.exports = router;

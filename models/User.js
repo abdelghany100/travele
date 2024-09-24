@@ -44,17 +44,17 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       unique: true,
     },
-    confirmEmail: {
-      type: String,
-      required: true,
-      trim: true,
-      validate: {
-        validator: function (val) {
-          return this.email === val;
-        },
-        message: "password and passwordConfirm are not the same",
-      },
-    },
+    // confirmEmail: {
+    //   type: String,
+    //   required: true,
+    //   trim: true,
+    //   validate: {
+    //     validator: function (val) {
+    //       return this.email === val;
+    //     },
+    //     message: "password and passwordConfirm are not the same",
+    //   },
+    // },
     password: {
       type: String,
       required: true,
@@ -75,11 +75,19 @@ const UserSchema = new mongoose.Schema(
       default:
         "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png ",
     },
-    isAdmin: {
+    isStaff: {
       type: Boolean,
       default: false,
     },
-
+    role: { 
+      type: String,
+      enum: ["user", "admin", "superAdmin"],
+      default: "user",
+    },
+    isAdmin:{
+      type: Boolean,
+      default: false,
+  },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetTokenExpire: Date,
@@ -101,7 +109,7 @@ UserSchema.methods.generateAuthToken = function () {
   return jwt.sign(
     {
       id: this._id,
-      isAdmin: this.isAdmin,
+      isAdmin: this.isAdmin, 
     },
     process.env.JWT_SECRET_KEY
   );

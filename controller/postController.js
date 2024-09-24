@@ -18,8 +18,8 @@ const AppError = require("../utils/AppError");
 
 module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
   // 1. validation for image
-  if (!req.file) {
-    return next(new AppError("no image provided", 400));
+  if (!req.files || req.files.length === 0) {
+    return next(new AppError("No images provided", 400));
   }
 
   // 2. validation for data
@@ -29,17 +29,16 @@ module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
   }
 
   // 3. Upload photo
-  const imagePath = `/images/${req.file.filename}`;
-  //   const result = await cloudinaryUploadImage(imagePath);
+  const images = req.files.map((file) => ({
+    url: `/images/${file.filename}`,
+  }));  //   const result = await cloudinaryUploadImage(imagePath);
   // 4. Create new post and save to DB
   const post = await Post.create({
     title: req.body.title,
     description: req.body.description,
     tags: req.body.tags || [],
     user: req.user.id,
-    image: {
-      url: imagePath,
-    },
+    image: images,
   });
 
   res.status(201).json({
@@ -187,9 +186,8 @@ module.exports.updatePostCtr = catchAsyncErrors(async (req, res, next) => {
  -------------------------------------*/
 
 module.exports.updatePostImageCtr = catchAsyncErrors(async (req, res , next) => {
-  if (!req.file) {
-    return next(new AppError( "no image provided" , 400));
-
+  if (!req.files || req.files.length === 0) {
+    return next(new AppError("No images provided", 400));
   }
 
   const post = await Post.findById(req.params.id);
@@ -202,20 +200,22 @@ module.exports.updatePostImageCtr = catchAsyncErrors(async (req, res , next) => 
   //   return next(new AppError({message: "access denied , forbidden"  } , 403));
 
   // }
-  const imagePathOld = path.join(__dirname, "..", post.image.url);
-  fs.unlinkSync(imagePathOld);
-  const newImagePath = `/images/${req.file.filename}`;
-
-
-
+  
+  post.image.forEach((img) => {
+    const imagePathOld = path.join(__dirname, "..", img.url);
+    if (fs.existsSync(imagePathOld)) {
+      fs.unlinkSync(imagePathOld);
+    }
+  });
+  // 3. Upload photos
+  const images = req.files.map((file) => ({
+    url: `/images/${file.filename}`,
+  }));
   const updatedPost = await Post.findByIdAndUpdate(
     req.params.id,
     {
       $set: {
-        image: {
-          url: newImagePath,
-         
-        },
+        image: images,
       },
     },
     { new: true }

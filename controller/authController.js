@@ -54,7 +54,7 @@ module.exports.registerUserCtr = catchAsyncErrors(async (req, res, next) => {
 
   res.status(201).json({
     status: "SUCCESS",
-    message: "you login successfully",
+    message: "you register successfully",
     length: user.length,
     data: { user },
     token,
