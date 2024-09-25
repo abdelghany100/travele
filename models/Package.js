@@ -39,18 +39,28 @@ const PackageSchema = new mongoose.Schema({
     ],
     default: [],
   },
-  program: [
-    {
-      day: {
-        type: Number,
-        required: true,
-      },
-      description: {
-        type: String,
-        required: true,
-      },
+  program: {
+    title: {
+      type: String,
+      required: true, 
     },
-  ],
+    description: {
+      type: String,
+      required:true
+    },
+    programItem: [
+      {
+        day: {
+          type: Number, 
+          required: true, // التأكد من أن اليوم مطلوب
+        },
+        description: {
+          type: String,
+          required: true, // التأكد من أن الوصف مطلوب
+        },
+      },
+    ],
+  },
   mapImages: {
     type: [
       {

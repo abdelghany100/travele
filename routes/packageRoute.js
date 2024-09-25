@@ -6,6 +6,8 @@ const {
   createImageMapCtrl,
   getAllPackages,
   deletePackage,
+  getSinglePackage,
+  updatePackage
 
 } = require("../controller/packageController");
 const { verifyTokenAndAdmin } = require("../middlewares/verifyToken");
@@ -20,7 +22,8 @@ router
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deletePackage)
-  .get(getAllPackages);
+  .get(getSinglePackage)
+  .patch(verifyTokenAndAdmin , updatePackage);
 router.post(
   "/image-package/:id",
   verifyTokenAndAdmin,

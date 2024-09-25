@@ -33,8 +33,11 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     },
     location,
     category,
-    program: program || [], // Ensure default empty array if not provided
-    // Ensure default empty array if not provided
+    program: {
+      title: program.title,            
+      description: program.description, 
+      programItem: program.programItem || [], 
+    },
   });
 
   const savedPackage = await newPackage.save();
@@ -86,7 +89,6 @@ module.exports.createImagePackageCtrl = catchAsyncErrors(
           }
         });
       });
-      console.log(",jb");
     }
 
     res.status(201).json({
@@ -139,7 +141,6 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
         }
       });
     });
-    console.log(",jb");
   }
 
   res.status(201).json({
@@ -216,7 +217,7 @@ module.exports.getSinglePackage = catchAsyncErrors(async (req, res, next) => {
  * @desc   Delete package by ID and remove images
  * @router /api/v1/package/:id
  * @method DELETE
- * @access private
+ * @access private (only admin)
  -------------------------------------*/
 module.exports.deletePackage = catchAsyncErrors(async (req, res, next) => {
   const package = await Package.findById(req.params.id);
@@ -256,5 +257,34 @@ module.exports.deletePackage = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     status: "SUCCESS",
     message: "Package and associated images deleted successfully..",
+  });
+});
+
+
+/**-------------------------------------
+ * @desc   update by ID
+ * @router /api/v1/package/:id
+ * @method PATCH
+ * @access private (only admin)
+ -------------------------------------*/
+ module.exports.updatePackage = catchAsyncErrors(async (req, res, next) => {
+  const updatedPackage = await Package.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,           
+      runValidators: true,   
+    }
+  );
+
+  if (!updatedPackage) {
+    return next(new AppError("Package Not Found", 404));
+  }
+
+  // إعادة الاستجابة
+  res.status(200).json({
+    status: "SUCCESS",
+    message: "Package updated successfully",
+    data: { updatedPackage },
   });
 });
