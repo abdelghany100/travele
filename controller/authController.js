@@ -35,7 +35,6 @@ module.exports.registerUserCtr = catchAsyncErrors(async (req, res, next) => {
   if (req.body.email != req.body.confirmEmail) {
     return next(new AppError("email and confirmEmail  are not the same", 500));
   }
- console.log("lop")
   user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
