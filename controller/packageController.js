@@ -34,9 +34,9 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     location,
     category,
     program: {
-      title: program.title,            
-      description: program.description, 
-      programItem: program.programItem || [], 
+      title: program.title,
+      description: program.description,
+      programItem: program.programItem || [],
     },
   });
 
@@ -158,30 +158,31 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
  * @access public 
  -------------------------------------*/
 module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
-  const { pageNumber, PRODUCT_PER_PAGE, category, location } = req.query;
+  const { pageNumber, PACKAGE_PER_PAGE, category, location } = req.query;
 
   let packages;
+
   const totalPackagesCount = await Package.countDocuments();
   if (pageNumber && !category && !location) {
     packages = await Package.find()
-      .skip((pageNumber - 1) * PRODUCT_PER_PAGE)
-      .limit(PRODUCT_PER_PAGE)
-      .sort({ createdAt: -1 });
+      .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
+      .limit(PACKAGE_PER_PAGE)
+      .sort({ isPin: -1, createdAt: -1 });
   } else if (category) {
     packages = await Package.find({ category })
-      .sort({ createdAt: -1 })
-      .skip((pageNumber - 1) * PRODUCT_PER_PAGE)
-      .limit(PRODUCT_PER_PAGE);
+      .sort({ isPin: -1, createdAt: -1 })
+      .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
+      .limit(PACKAGE_PER_PAGE);
   } else if (location) {
     packages = await Package.find({ location })
-      .sort({ createdAt: -1 })
-      .skip((pageNumber - 1) * PRODUCT_PER_PAGE)
-      .limit(PRODUCT_PER_PAGE);
+      .sort({ isPin: -1, createdAt: -1 })
+      .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
+      .limit(PACKAGE_PER_PAGE);
   } else {
-    packages = await Package.find().sort({ createdAt: -1 });
+    packages = await Package.find().sort({ isPin: -1, createdAt: -1 });
   }
 
-  const totalPages = Math.ceil(totalPackagesCount / PRODUCT_PER_PAGE);
+  const totalPages = Math.ceil(totalPackagesCount / PACKAGE_PER_PAGE);
 
   res.status(200).json({
     status: "SUCCESS",
@@ -260,20 +261,19 @@ module.exports.deletePackage = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 /**-------------------------------------
  * @desc   update by ID
  * @router /api/v1/package/:id
  * @method PATCH
  * @access private (only admin)
  -------------------------------------*/
- module.exports.updatePackage = catchAsyncErrors(async (req, res, next) => {
+module.exports.updatePackage = catchAsyncErrors(async (req, res, next) => {
   const updatedPackage = await Package.findByIdAndUpdate(
     req.params.id,
     req.body,
     {
-      new: true,           
-      runValidators: true,   
+      new: true,
+      runValidators: true,
     }
   );
 
@@ -288,3 +288,34 @@ module.exports.deletePackage = catchAsyncErrors(async (req, res, next) => {
     data: { updatedPackage },
   });
 });
+
+module.exports.togglePinPinCtr = catchAsyncErrors(async (req, res, next) => {
+  // جلب الحزمة الحالية
+  const currentPackage = await Package.findById(req.params.id);
+
+  if (!currentPackage) {
+    return next(new AppError("Package Not Found", 404));
+  }
+
+  // عكس قيمة isPin
+  const toggledPin = !currentPackage.isPin;
+
+  // تحديث الحزمة بقيمة isPin الجديدة
+  const updatedPackage = await Package.findByIdAndUpdate(
+    req.params.id,
+    {
+      isPin: toggledPin,
+    },
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: "SUCCESS",
+    message: "Package pin status toggled successfully",
+    data: { updatedPackage },
+  });
+});
+

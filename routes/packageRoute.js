@@ -7,13 +7,15 @@ const {
   getAllPackages,
   deletePackage,
   getSinglePackage,
-  updatePackage
+  updatePackage,
+  togglePinPinCtr
 
 } = require("../controller/packageController");
 const { verifyTokenAndAdmin } = require("../middlewares/verifyToken");
 const { photoUpload } = require("../middlewares/photoUpload");
 
 const router = express.Router();
+router.route("/toggle-pin/:id").get(verifyTokenAndAdmin , togglePinPinCtr)
 
 router
   .route("/")
@@ -36,6 +38,5 @@ router.post(
   photoUpload.array("images", 10),
   createImageMapCtrl 
 ); 
-
 
 module.exports = router;

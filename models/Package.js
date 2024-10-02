@@ -1,3 +1,4 @@
+const { boolean } = require("joi");
 const mongoose = require("mongoose");
 
 const PackageSchema = new mongoose.Schema({
@@ -42,16 +43,16 @@ const PackageSchema = new mongoose.Schema({
   program: {
     title: {
       type: String,
-      required: true, 
+      required: true,
     },
     description: {
       type: String,
-      required:true
+      required: true,
     },
     programItem: [
       {
         day: {
-          type: Number, 
+          type: Number,
           required: true, // التأكد من أن اليوم مطلوب
         },
         description: {
@@ -73,9 +74,11 @@ const PackageSchema = new mongoose.Schema({
     ],
     default: [],
   },
- 
+  isPin: { 
+    type: Boolean,
+    default: false,
+  },
 });
- 
 
 const Package = mongoose.model("Package", PackageSchema);
 
@@ -106,5 +109,5 @@ const TypePackage = mongoose.model("TypePackage", TypePackageSchema);
 
 module.exports = {
   Package,
-  TypePackage
+  TypePackage,
 };

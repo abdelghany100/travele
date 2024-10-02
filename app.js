@@ -35,6 +35,7 @@ app.use("/api/v1/posts", require("./routes/postRoute"));
 app.use("/api/v1/package", require("./routes/packageRoute"));
 app.use("/api/v1/comments", require("./routes/commentRoute"));
 app.use("/api/v1/faq", require("./routes/FaqRoute"));
+app.use("/api/v1/bookings", require("./routes/BookingRoute"));
 
 
 
