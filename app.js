@@ -6,6 +6,7 @@ dotenv.config({ path: "config.env" });
 const cors = require("cors");
 const compression = require("compression");
 const { errorHandler, notFound } = require("./middlewares/error");
+const path = require("path");
 
 const app = express();
 
@@ -21,7 +22,7 @@ mongoose
   .catch((err) => {
     console.log(err);
   });
-  
+
   app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(cors());
