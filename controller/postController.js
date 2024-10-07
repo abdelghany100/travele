@@ -60,6 +60,8 @@ module.exports.getAllPostCtrl = catchAsyncErrors(async (req, res, next) => {
   
   const { POST_PER_PAGE = 4 , pageNumber, category } = req.query;
   let posts;
+  const totalPostCount = await Post.countDocuments();
+
   if (pageNumber) {
     posts = await Post.find()
       .skip((pageNumber - 1) * POST_PER_PAGE)
@@ -75,10 +77,14 @@ module.exports.getAllPostCtrl = catchAsyncErrors(async (req, res, next) => {
       .sort({ createdAt: -1 })
       .populate("user");
   }
+  const totalPages = Math.ceil(totalPostCount / POST_PER_PAGE);
+
   res.status(200).json({
     status: "SUCCESS",
     message: "",
     length: posts.length,
+    totalPages,
+    totalPosts: totalPostCount,
     data: { posts },
   });
 });
