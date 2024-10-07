@@ -57,13 +57,13 @@ module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
  -------------------------------------*/
 
 module.exports.getAllPostCtrl = catchAsyncErrors(async (req, res, next) => {
-  const POST_PER_PAGE = 2;
-  const { pageNumber, category } = req.query;
+  
+  const { POST_PER_PAGE = 4 , pageNumber, category } = req.query;
   let posts;
   if (pageNumber) {
     posts = await Post.find()
       .skip((pageNumber - 1) * POST_PER_PAGE)
-      .limit(PLOG_PER_PAGE)
+      .limit(POST_PER_PAGE)
       .sort({ createdAt: -1 })
       .populate("user");
   } else if (category) {
