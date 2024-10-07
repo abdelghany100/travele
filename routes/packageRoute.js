@@ -4,7 +4,7 @@ const {
   createPackageCtrl,
   createImagePackageCtrl,
   createImageMapCtrl,
-  getAllPackages,
+  getAllPackages, 
   deletePackage,
   getSinglePackage,
   updatePackage,

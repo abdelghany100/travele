@@ -1,6 +1,6 @@
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const AppError = require("../utils/AppError");
-const { Package } = require("../models/Package");
+const { Package, TypePackage } = require("../models/Package");
 const fs = require("fs");
 const path = require("path");
 /**-------------------------------------
@@ -164,7 +164,7 @@ module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
 
   const totalPackagesCount = await Package.countDocuments();
   if (pageNumber && !category && !location) {
-    packages = await Package.find()
+    packages = await Package.find().populate('typePackages')
       .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
       .limit(PACKAGE_PER_PAGE)
       .sort({ isPin: -1, createdAt: -1 });
@@ -201,7 +201,7 @@ module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
  * @access public
  -------------------------------------*/
 module.exports.getSinglePackage = catchAsyncErrors(async (req, res, next) => {
-  const package = await Package.findById(req.params.id);
+  const package = await Package.findById(req.params.id).populate('typePackages');
 
   if (!package) {
     return next(new AppError("Package Not Found", 404));
@@ -251,6 +251,8 @@ module.exports.deletePackage = catchAsyncErrors(async (req, res, next) => {
       });
     });
   }
+
+  await TypePackage.deleteMany({ packageName: req.params.id });
 
   // حذف الحزمة من قاعدة البيانات
   await Package.findByIdAndDelete(req.params.id);
@@ -318,4 +320,4 @@ module.exports.togglePinPinCtr = catchAsyncErrors(async (req, res, next) => {
     data: { updatedPackage },
   });
 });
-
+ 

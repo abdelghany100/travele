@@ -23,7 +23,7 @@ mongoose
     console.log(err);
   });
 
-  app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(cors());
 
@@ -36,18 +36,17 @@ app.use(express.json());
 app.use("/api/v1/auth", require("./routes/authRoute"));
 app.use("/api/v1/posts", require("./routes/postRoute"));
 app.use("/api/v1/package", require("./routes/packageRoute"));
+app.use("/api/v1/type-package", require("./routes/typePackageRoute"));
 app.use("/api/v1/comments", require("./routes/commentRoute"));
 app.use("/api/v1/faq", require("./routes/FaqRoute"));
 app.use("/api/v1/bookings", require("./routes/BookingRoute"));
 
-
-
 app.use(notFound);
 
-app.use(errorHandler); 
+app.use(errorHandler);
 
 if (process.env.NODE_ENV === "development") {
-  app.use(morgan("dev")); 
+  app.use(morgan("dev"));
 }
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
