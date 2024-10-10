@@ -1,5 +1,5 @@
-const fs = require("fs");
 const path = require("path");
+const fs = require("fs");
 const {
   Post,
   validateCreatePost,
@@ -94,7 +94,7 @@ module.exports.getAllPostCtrl = catchAsyncErrors(async (req, res, next) => {
  * @router /api/v1/posts/:id
  * @method GET
  * @access public
- -------------------------------------*/
+ - ------------------------------------*/
 
 module.exports.getSinglePostsCtrl = catchAsyncErrors(async (req, res, next) => {
   const post = await Post.findById(req.params.id)
@@ -118,29 +118,49 @@ module.exports.getSinglePostsCtrl = catchAsyncErrors(async (req, res, next) => {
  * @access private (only admin or owner of the post)
  -------------------------------------*/
 
-module.exports.deletePostCtrl = catchAsyncErrors(async (req, res, next) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) {
-    return next(new AppError("post not found", 404));
-  }
-
-  if (req.user.isAdmin || req.user.id === post.user.toString()) {
-    console.log(post.image.url);
-    const imagePath = path.join(__dirname, "..", post.image.url);
-    fs.unlinkSync(imagePath);
-    await Post.findByIdAndDelete(req.params.id);
-    await Comment.deleteMany({ postId: post._id });
-
-    res.status(200).json({
-      status: "SUCCESS",
-      message: "Post deleted successfully",
-      length: post.length,
-      data: {},
-    });
-  } else {
-    return next(new AppError("access denied , forbidden", 403));
-  }
-});
+ module.exports.deletePostCtrl = catchAsyncErrors(async (req, res, next) => {
+   const post = await Post.findById(req.params.id);
+   if (!post) {
+     return next(new AppError("post not found", 404));
+   }
+ 
+   if (req.user.isAdmin) {
+     if (post.image && post.image.length > 0) {
+       post.image.forEach((img) => {
+         if (img.url) {
+           const imagePath = path.join(__dirname, "..", img.url);
+           
+           try {
+             // Check if the file exists before deleting
+             if (fs.existsSync(imagePath)) {
+               fs.unlinkSync(imagePath);
+             } else {
+               console.log("Image file does not exist.");
+             }
+           } catch (error) {
+             console.error("Error deleting image file:", error);
+             return next(new AppError("Error deleting image file", 500));
+           }
+         }
+       });
+     } else {
+       console.log("Post does not have any images.");
+     }
+ 
+     await Post.findByIdAndDelete(req.params.id);
+     await Comment.deleteMany({ postId: post._id });
+ 
+     res.status(200).json({
+       status: "SUCCESS",
+       message: "Post deleted successfully",
+       length: post.length,
+       data: {},
+     });
+   } else {
+     return next(new AppError("Access denied, forbidden", 403));
+   }
+ });
+ 
 
 /**-------------------------------------
  * @desc   Update post

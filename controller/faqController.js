@@ -35,20 +35,61 @@ module.exports.createFaqCtr = catchAsyncErrors(async (req, res, next) => {
  * @method GET
  * @access public
  -------------------------------------*/
-module.exports.getAllFaqsCtr = catchAsyncErrors(async (req, res, next) => {
-    const faqs = await FAQ.find(); // الحصول على جميع الـ FAQs
+ module.exports.getFaqsWithAnswersCtr = catchAsyncErrors(async (req, res, next) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // البحث عن الأسئلة التي تحتوي على إجابات (answer موجودة)
+    const faqs = await FAQ.find({ answer: { $exists: true, $ne: "" } })
+        .skip(skip)
+        .limit(limit);
 
     if (!faqs || faqs.length === 0) {
-        return next(new AppError("No FAQs found", 404));
+        return next(new AppError("No FAQs with answers found", 404));
     }
+
+    const totalFaqs = await FAQ.countDocuments({ answer: { $exists: true, $ne: "" } });
 
     res.status(200).json({
         status: "SUCCESS",
-        message: "FAQs retrieved successfully",
+        message: "FAQs with answers retrieved successfully",
         length: faqs.length,
+        page,
+        totalPages: Math.ceil(totalFaqs / limit),
         data: { faqs },
     });
 });
+
+module.exports.getFaqsWithoutAnswersCtr = catchAsyncErrors(async (req, res, next) => {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    // البحث عن الأسئلة التي لا تحتوي على إجابات (answer غير موجودة أو فارغة)
+    const faqs = await FAQ.find({ answer: { $exists: false } })
+        .skip(skip)
+        .limit(limit);
+
+    if (!faqs || faqs.length === 0) {
+        return next(new AppError("No FAQs without answers found", 404));
+    }
+
+    const totalFaqs = await FAQ.countDocuments({ answer: { $exists: false } });
+
+    res.status(200).json({
+        status: "SUCCESS",
+        message: "FAQs without answers retrieved successfully",
+        length: faqs.length,
+        page,
+        totalPages: Math.ceil(totalFaqs / limit),
+        data: { faqs },
+    });
+});
+
+
+
+
 
 /**-------------------------------------
  * @desc   get single faq

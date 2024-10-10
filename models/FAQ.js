@@ -9,7 +9,7 @@ const FQASchema = new mongoose.Schema({
   },
   answer: { 
     type: String,
-    required: [true, "answer is required"],
+    // required: [true, "answer is required"],
     trim: true,
   },
 });
