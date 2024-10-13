@@ -18,5 +18,5 @@ router
 router.route("/:id" )
 .get(validateObjectid , verifyTokenAndAdmin , getSingleTypePackageCtrl)
 .patch(validateObjectid , verifyTokenAndAdmin , updateTypePackageCtrl)
-.patch(validateObjectid , verifyTokenAndAdmin , deleteTypePackageCtrl)
+.delete(validateObjectid , verifyTokenAndAdmin , deleteTypePackageCtrl)
 module.exports = router;

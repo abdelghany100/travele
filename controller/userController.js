@@ -28,3 +28,21 @@ module.exports.getAllUsers = catchAsyncErrors(async (req, res, next) => {
     data: users,
   });
 });
+
+
+module.exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
+  const userId = req.params.id; // الحصول على معرف المستخدم من الـ params
+
+  // البحث عن المستخدم وحذفه
+  const user = await User.findByIdAndDelete(userId);
+
+  // التحقق من وجود المستخدم
+  if (!user) {
+    return next(new AppError("User not found", 404)); // إذا لم يتم العثور على المستخدم
+  }
+
+  res.status(200).json({
+    status: "SUCCESS",
+    message: "User deleted successfully",
+  });
+});

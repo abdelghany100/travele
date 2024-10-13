@@ -1,4 +1,5 @@
 const { TypePackage } = require("../models/Package");
+const AppError = require("../utils/AppError");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 
 /**-------------------------------------
