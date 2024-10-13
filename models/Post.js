@@ -78,6 +78,7 @@ function validateUpdatePost(obj) {
   const Schema = Joi.object({
     title: Joi.string().trim().min(2).max(200),
     description: Joi.string().trim().min(10),
+    
   });
   return Schema.validate(obj);
 }
@@ -89,3 +90,4 @@ module.exports = {
   validateCreatePost,
   validateUpdatePost,
 };
+ 
