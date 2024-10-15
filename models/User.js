@@ -17,13 +17,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },
-    mobile: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    phone: {
+    },phone: {
       type: String,
       required: true,
       trim: true,
@@ -138,11 +132,9 @@ function validateRegisterUser(obj) {
     firstName: joi.string().trim().required(),
     lastName: joi.string().trim().required(),
     email: joi.string().trim().required().email(),
-    confirmEmail: joi.string().trim().required().email(),
     password: joi.string().trim().required(),
     confirmPassword: joi.string().required(),
     phone: joi.string().trim().required(),
-    mobile: joi.string().trim().required(),
     city: joi.string().trim().required(),
     country: joi.string().trim().required(),
   });

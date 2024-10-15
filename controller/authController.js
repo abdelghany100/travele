@@ -32,18 +32,14 @@ module.exports.registerUserCtr = catchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  if (req.body.email != req.body.confirmEmail) {
-    return next(new AppError("email and confirmEmail  are not the same", 500));
-  }
+
   user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    mobile: req.body.mobile,
     phone: req.body.phone,
     city: req.body.city,
     country: req.body.country,
     email: req.body.email,
-    confirmEmail: req.body.confirmEmail,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
   });
