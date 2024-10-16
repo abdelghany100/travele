@@ -4,7 +4,7 @@ const { verifyTokenAndAdmin } = require("../middlewares/verifyToken");
 
 const router = express.Router();
 
-router.route("/").post(verifyTokenAndAdmin, createFaqCtr)
+router.route("/").post( createFaqCtr)
 router.get("/answer" , getFaqsWithAnswersCtr);
 router.get("/not-answer" , verifyTokenAndAdmin , getFaqsWithoutAnswersCtr);
 router.route("/:id")
