@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 const { trim } = require("validator");
+const Joi = require("joi");
+
 
 // إنشاء Schema لكائن يحتوي على حقلين
 const FQASchema = new mongoose.Schema({
@@ -27,13 +29,13 @@ const FQASchema = new mongoose.Schema({
   },
 });
 function validateFac(obj) {
-  const Schema = joi.object({
+  const Schema = Joi.object({
   
-    email: joi.string().trim().email(),
-    phone: joi.string().trim(),
-    name: joi.string().trim(),
-    answer: joi.string().trim(),
-    question: joi.string().trim().required(),
+    email: Joi.string().trim().email(),
+    phone: Joi.string().trim(),
+    name: Joi.string().trim(),
+    answer: Joi.string().trim(),
+    question: Joi.string().trim().required(),
   });
   return Schema.validate(obj);
 }
