@@ -17,38 +17,14 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-    },phone: {
-      type: String,
-      required: true,
-      trim: true,
     },
-    city: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    country: {
-      type: String,
-      required: true,
-      trim: true,
-    },
+
     email: {
       type: String,
       required: true,
       trim: true,
       unique: true,
     },
-    // confirmEmail: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    //   validate: {
-    //     validator: function (val) {
-    //       return this.email === val;
-    //     },
-    //     message: "password and passwordConfirm are not the same",
-    //   },
-    // },
     password: {
       type: String,
       required: true,
@@ -73,15 +49,15 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    role: { 
+    role: {
       type: String,
       enum: ["user", "admin", "superAdmin"],
       default: "user",
     },
-    isAdmin:{
+    isAdmin: {
       type: Boolean,
       default: false,
-  },
+    },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetTokenExpire: Date,
@@ -92,25 +68,24 @@ const UserSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-UserSchema.virtual("posts" , {
-    ref:"Post",
-    foreignField:"user",
-    localField:"_id",
-  })
-  
+UserSchema.virtual("posts", {
+  ref: "Post",
+  foreignField: "user",
+  localField: "_id",
+});
+
 // Generate Auth Token
 UserSchema.methods.generateAuthToken = function () {
   return jwt.sign(
     {
       id: this._id,
-      isAdmin: this.isAdmin, 
+      isAdmin: this.isAdmin,
     },
     process.env.JWT_SECRET_KEY
   );
 };
 
 UserSchema.pre("save", async function (next) {
-  // Hash the password if the password field is modified
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.confirmPassword = undefined;
@@ -134,9 +109,6 @@ function validateRegisterUser(obj) {
     email: joi.string().trim().required().email(),
     password: joi.string().trim().required(),
     confirmPassword: joi.string().required(),
-    phone: joi.string().trim().required(),
-    city: joi.string().trim().required(),
-    country: joi.string().trim().required(),
   });
   return Schema.validate(obj);
 }

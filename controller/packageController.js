@@ -171,16 +171,20 @@ module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
       .sort({ isPin: -1, createdAt: -1 });
   } else if (category) {
     packages = await Package.find({ category })
+      .populate("typePackages")
       .sort({ isPin: -1, createdAt: -1 })
       .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
       .limit(PACKAGE_PER_PAGE);
   } else if (location) {
     packages = await Package.find({ location })
+      .populate("typePackages")
       .sort({ isPin: -1, createdAt: -1 })
       .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
       .limit(PACKAGE_PER_PAGE);
   } else {
-    packages = await Package.find().sort({ isPin: -1, createdAt: -1 });
+    packages = await Package.find()
+      .populate("typePackages")
+      .sort({ isPin: -1, createdAt: -1 });
   }
 
   const totalPages = Math.ceil(totalPackagesCount / PACKAGE_PER_PAGE);

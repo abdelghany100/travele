@@ -13,8 +13,8 @@ const router = express.Router();
 // Routes for Booking
 router
   .route("/")
-  .post(verifyTokenAndAdmin, createBooking)  
-  .get(getAllBookings);                      
+  .post( createBooking)  
+  .get(verifyTokenAndAdmin, getAllBookings);                      
 router
   .route("/:id")
   .get(verifyTokenAndAdmin ,getSingleBooking)                      

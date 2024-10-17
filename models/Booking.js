@@ -12,6 +12,16 @@ const BookingSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    city: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    country: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     number: {
       type: String,
       required: true,
@@ -21,6 +31,7 @@ const BookingSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    
     options: {
         type: [String], // Change to an array of strings
         enum: ["tour guide", "insurance", "dinner", "bike rent"],
@@ -47,6 +58,14 @@ function validateBooking(data) {
   const schema = joi.object({
     name: joi.string().trim().required().messages({
       "string.empty": "Name is required",
+    }),
+    city:joi.string().trim().required().messages({
+      "string.empty": "Name is required",
+
+    }),
+    country:joi.string().trim().required().messages({
+      "string.empty": "Name is required",
+
     }),
     email: joi.string().trim().email().required().messages({
       "string.empty": "Email is required",

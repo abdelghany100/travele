@@ -36,9 +36,6 @@ module.exports.registerUserCtr = catchAsyncErrors(async (req, res, next) => {
   user = new User({
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    phone: req.body.phone,
-    city: req.body.city,
-    country: req.body.country,
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
