@@ -29,6 +29,9 @@ const PackageSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    keyword: {
+      type: String,
+    },
     image: {
       type: [
         {
@@ -110,7 +113,7 @@ const TypePackageSchema = new mongoose.Schema({
         type: Number,
         required: true,
       },
-    }
+    },
   ],
   packageName: {
     type: mongoose.Schema.Types.ObjectId,

@@ -22,6 +22,7 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     image,
     program,
     mapImages,
+    keyword
   } = req.body;
 
   const newPackage = new Package({
@@ -31,6 +32,7 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
       day: duration.day,
       nights: duration.nights,
     },
+    keyword,
     location,
     category,
     program: {
