@@ -15,7 +15,9 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
 
   const {
     title,
+    titleOutSide,
     description,
+    descriptionOutSide,
     duration,
     location,
     category,
@@ -27,7 +29,9 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
 
   const newPackage = new Package({
     title,
+    titleOutSide,
     description,
+    descriptionOutSide,
     duration: {
       day: duration.day,
       nights: duration.nights,
@@ -160,7 +164,7 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
  * @access public 
  -------------------------------------*/
 module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
-  const { pageNumber, PACKAGE_PER_PAGE, category, location } = req.query;
+  const { pageNumber, PACKAGE_PER_PAGE = 4, category, location } = req.query;
 
   let packages;
 
@@ -327,5 +331,31 @@ module.exports.togglePinPinCtr = catchAsyncErrors(async (req, res, next) => {
     status: "SUCCESS",
     message: "Package pin status toggled successfully",
     data: { updatedPackage },
+  });
+});
+
+
+
+/**-------------------------------------
+ * @desc   Get all unique categories
+ * @router /api/v1/package/categories
+ * @method GET
+ * @access public 
+ -------------------------------------*/
+ module.exports.getAllCategories = catchAsyncErrors(async (req, res, next) => {
+  const categories = await Package.distinct("category");
+
+  if (!categories) {
+    return res.status(404).json({
+      status: "FAIL",
+      message: "No categories found",
+    });
+  }
+
+  res.status(200).json({
+    status: "SUCCESS",
+    message: "Categories retrieved successfully",
+    length: categories.length,
+    data: { categories },
   });
 });

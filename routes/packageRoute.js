@@ -8,7 +8,8 @@ const {
   deletePackage,
   getSinglePackage,
   updatePackage,
-  togglePinPinCtr
+  togglePinPinCtr,
+  getAllCategories
 
 } = require("../controller/packageController");
 const { verifyTokenAndAdmin } = require("../middlewares/verifyToken");
@@ -21,6 +22,7 @@ router
   .route("/")
   .post(verifyTokenAndAdmin, createPackageCtrl)
   .get(getAllPackages);
+  router.route("/allCategorys").get(getAllCategories)
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deletePackage)

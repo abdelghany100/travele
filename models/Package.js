@@ -6,10 +6,22 @@ const PackageSchema = new mongoose.Schema(
     title: {
       type: String,
       required: true,
+      trim: true,
+    },
+    titleOutSide: {
+      type: String,
+      required: true,
+      trim: true,
     },
     description: {
       type: String,
       required: true,
+      trim: true,
+    },
+    descriptionOutSide: {
+      type: String,
+      required: true,
+      trim: true,
     },
     duration: {
       day: {
@@ -24,13 +36,16 @@ const PackageSchema = new mongoose.Schema(
     location: {
       type: String,
       required: true,
+      trim: true,
     },
     category: {
       type: String,
       required: true,
+      trim: true,
     },
     keyword: {
       type: String,
+      trim: true,
     },
     image: {
       type: [
@@ -48,10 +63,12 @@ const PackageSchema = new mongoose.Schema(
       title: {
         type: String,
         required: true,
+        trim: true,
       },
       description: {
         type: String,
         required: true,
+        trim: true,
       },
       programItem: [
         {
@@ -61,7 +78,8 @@ const PackageSchema = new mongoose.Schema(
           },
           description: {
             type: String,
-            required: true, // التأكد من أن الوصف مطلوب
+            required: true,
+            trim: true,
           },
         },
       ],

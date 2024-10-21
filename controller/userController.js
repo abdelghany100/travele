@@ -1,4 +1,5 @@
 const { User } = require("../models/User");
+const AppError = require("../utils/AppError");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const fs = require("fs");
 const path = require("path");

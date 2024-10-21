@@ -41,6 +41,7 @@ app.use("/api/v1/comments", require("./routes/commentRoute"));
 app.use("/api/v1/faq", require("./routes/FaqRoute"));
 app.use("/api/v1/bookings", require("./routes/BookingRoute"));
 app.use("/api/v1/user", require("./routes/userRoute"));
+app.use("/api/v1/pages", require("./routes/pagesRoute"));
 
 app.use(notFound);
 

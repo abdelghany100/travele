@@ -24,6 +24,7 @@ module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
 
   // 2. validation for data
   const { error } = validateCreatePost(req.body);
+  
   if (error) {
     return next(new AppError(`${error.details[0].message} `, 400));
   }
@@ -38,6 +39,9 @@ module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
     description: req.body.description,
     tags: req.body.tags || [],
     user: req.user.id,
+    titleOutSide:req.body.titleOutSide,
+    descriptionOutSide:req.body.descriptionOutSide,
+    category:req.body.category,
     image: images,
   });
 

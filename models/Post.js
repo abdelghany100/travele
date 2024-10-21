@@ -12,11 +12,28 @@ const PostSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 200,
     },
+    titleOutSide: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 2,
+      maxlength: 200,
+    },
     description: {
       type: String,
       required: true,
       trim: true,
       minlength: 10,
+    },
+    descriptionOutSide: {
+      type: String,
+      required: true,
+      trim: true,
+      minlength: 10,
+    },
+    category: {
+      type: String,
+      required: true,
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -67,7 +84,10 @@ PostSchema.pre(/^find/, function (next) {
 function validateCreatePost(obj) {
   const Schema = Joi.object({
     title: Joi.string().trim().min(2).max(200).required(),
+    titleOutSide: Joi.string().trim().min(2).max(200).required(),
     description: Joi.string().trim().min(10).required(),
+    descriptionOutSide: Joi.string().trim().min(10).required(),
+    category: Joi.string().trim().required(),
     tags: Joi.array(),
   });
   return Schema.validate(obj);
