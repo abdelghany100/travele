@@ -24,15 +24,14 @@ mongoose
   });
 
 app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/imagesPlogs", express.static(path.join(__dirname, "images")));
 
 app.use(cors());
 
-// Add compression middleware
 app.use(compression());
 
 app.use(express.json());
 
-// Routes
 app.use("/api/v1/auth", require("./routes/authRoute"));
 app.use("/api/v1/posts", require("./routes/postRoute"));
 app.use("/api/v1/package", require("./routes/packageRoute"));
@@ -42,6 +41,7 @@ app.use("/api/v1/faq", require("./routes/FaqRoute"));
 app.use("/api/v1/bookings", require("./routes/BookingRoute"));
 app.use("/api/v1/user", require("./routes/userRoute"));
 app.use("/api/v1/pages", require("./routes/pagesRoute"));
+app.use("/api/v1/ImagesPlogs", require("./routes/ImagesBlogsRoute.js.js"));
 
 app.use(notFound);
 

@@ -14,6 +14,19 @@ const photoStorage = multer.diskStorage({
     }
   },
 });
+// Photo Storage Configuration
+const photoStorageBlog = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../imagesBlogs"));
+  },
+  filename: function (req, file, cb) {
+    if (file) {
+      cb(null, new Date().toISOString().replace(/:/g, "-") + file.originalname);
+    } else {
+      cb(null, false);
+    }
+  },
+});
 
 // Create Multer Instance
 const photoUpload = multer({
@@ -29,3 +42,16 @@ const photoUpload = multer({
 });
 
 module.exports = { photoUpload };
+const photoUploadBlog = multer({
+  storage: photoStorageBlog,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype.startsWith("image")) {
+      cb(null, true);
+    } else {
+      cb({ message: "Unsupported file format" }, false);
+    }
+  },
+  limits: { fileSize: 1024 * 1024 }, // 1 megabyte
+});
+
+module.exports = { photoUpload , photoUploadBlog};
