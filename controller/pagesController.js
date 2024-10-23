@@ -15,20 +15,17 @@ const path = require('path');
   const images = req.body.images || []; // تأكد من أن images هو مصفوفة حتى إذا كان غير موجود
   const links = req.body.links || []; // تأكد من أن links هو مصفوفة حتى إذا كان غير موجود
 
-  // العثور على الصفحة أو إنشاؤها إذا لم تكن موجودة
   let page = await Page.findOne({ name: pageName });
 
   if (!page) {
     page = new Page({ name: pageName });
   }
 
-  // معالجة الصور والوصف لكل صورة
   const imagesLinks = req.files.map((file, index) => ({
     url: `/images/${file.filename}`,
-    description: images[index] ? images[index].description || "" : "", // تأكد من وجود الوصف مع كل صورة
+    description: images[index] ? images[index].description || "" : "", 
   }));
 
-  // إنشاء أو تحديث القسم
   const section = {
     title,
     content,
@@ -36,7 +33,7 @@ const path = require('path');
     links: links.map((link) => ({
       label: link.label,
       url: link.url,
-    })), // معالجة الروابط
+    })), 
     order,
   };
 

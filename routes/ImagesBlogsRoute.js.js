@@ -17,6 +17,6 @@ router.post(
 );
 
 router.get("/", verifyTokenAndAdmin, getAllImagesBlogs);
-router.delete("/", verifyTokenAndAdmin, deleteImage);
+router.post("/delete", verifyTokenAndAdmin, deleteImage);
 
 module.exports = router;
