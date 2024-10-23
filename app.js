@@ -24,7 +24,10 @@ mongoose
   });
 
 app.use("/images", express.static(path.join(__dirname, "images")));
-app.use("/imagesBlogs", express.static(path.join(__dirname, "images")));
+
+
+
+app.use("/imagesBlogs", express.static(path.join(__dirname, "/imagesBlogs")));
 
 app.use(cors());
 
