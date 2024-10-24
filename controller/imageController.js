@@ -20,7 +20,6 @@ module.exports.insertImage = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-
 module.exports.getAllImagesBlogs = catchAsyncErrors(async (req, res, next) => {
   const imagesDir = path.join(__dirname, "../imagesBlogs");
 
@@ -61,7 +60,7 @@ module.exports.deleteImage = catchAsyncErrors(async (req, res, next) => {
     });
   }
   console.log(imageName);
-  
+
   // التأكد من أن المسار يبدأ بـ "/imagesBlogs"
   if (!imageName.startsWith("/imagesBlogs")) {
     return res.status(400).json({
