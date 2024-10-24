@@ -164,40 +164,35 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
  * @access public 
  -------------------------------------*/
 module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
-  const { pageNumber, PACKAGE_PER_PAGE = 4, category, location } = req.query;
+  const { pageNumber = 1, PACKAGE_PER_PAGE = 4, category, location } = req.query;
 
-  let packages;
+  let filter = {}; // كائن الفلاتر
 
-  const totalPackagesCount = await Package.countDocuments();
-  if (pageNumber && !category && !location) {
-    packages = await Package.find()
-      .populate("typePackages")
-      .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
-      .limit(PACKAGE_PER_PAGE)
-      .sort({ isPin: -1, createdAt: -1 });
-  } else if (category) {
-    packages = await Package.find({ category })
-      .populate("typePackages")
-      .sort({ isPin: -1, createdAt: -1 })
-      .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
-      .limit(PACKAGE_PER_PAGE);
-  } else if (location) {
-    packages = await Package.find({ location })
-      .populate("typePackages")
-      .sort({ isPin: -1, createdAt: -1 })
-      .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
-      .limit(PACKAGE_PER_PAGE);
-  } else {
-    packages = await Package.find()
-      .populate("typePackages")
-      .sort({ isPin: -1, createdAt: -1 });
+  // إضافة الفلاتر بناءً على المدخلات
+  if (category) {
+    filter.category = category;
   }
 
+  if (location) {
+    filter.location = location;
+  }
+
+  // احسب العدد الإجمالي للبيانات بعد التصفية
+  const totalPackagesCount = await Package.countDocuments(filter);
+
+  // ابحث عن البيانات المصفاة وطبق pagination
+  const packages = await Package.find(filter)
+    .populate("typePackages")
+    .sort({ isPin: -1, createdAt: -1 })
+    .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
+    .limit(PACKAGE_PER_PAGE);
+
+  // احسب العدد الإجمالي للصفحات بناءً على البيانات المصفاة
   const totalPages = Math.ceil(totalPackagesCount / PACKAGE_PER_PAGE);
 
   res.status(200).json({
     status: "SUCCESS",
-    message: "Products retrieved successfully",
+    message: "Packages retrieved successfully",
     length: packages.length,
     totalPackagesCount,
     totalPages,
