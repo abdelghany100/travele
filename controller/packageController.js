@@ -166,28 +166,24 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
 module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
   const { pageNumber = 1, PACKAGE_PER_PAGE = 4, category, location } = req.query;
 
-  let filter = {}; // كائن الفلاتر
+  let filter = {}; 
 
-  // إضافة الفلاتر بناءً على المدخلات
   if (category) {
-    filter.category = category;
+    filter.category = new RegExp(category, "i");
   }
 
   if (location) {
-    filter.location = location;
+    filter.location = new RegExp(location, "i");
   }
 
-  // احسب العدد الإجمالي للبيانات بعد التصفية
   const totalPackagesCount = await Package.countDocuments(filter);
 
-  // ابحث عن البيانات المصفاة وطبق pagination
   const packages = await Package.find(filter)
     .populate("typePackages")
     .sort({ isPin: -1, createdAt: -1 })
     .skip((pageNumber - 1) * PACKAGE_PER_PAGE)
     .limit(PACKAGE_PER_PAGE);
 
-  // احسب العدد الإجمالي للصفحات بناءً على البيانات المصفاة
   const totalPages = Math.ceil(totalPackagesCount / PACKAGE_PER_PAGE);
 
   res.status(200).json({
