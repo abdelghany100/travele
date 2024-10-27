@@ -96,14 +96,11 @@ module.exports.getLocation = catchAsyncErrors(async (req, res, next) => {
 module.exports.getAllLocations = catchAsyncErrors(async (req, res, next) => {
   const locations = await Location.find();
 
-  // Create arrays for cities and districts
-  const country = locations.map((location) => location.country);
-  const city = locations.map((location) => location.city);
 
   res.status(200).json({
     status: "SUCCESS",
     results: locations.length,
-    data: { country, city },
+    data: { locations },
   });
 });
 /**-------------------------------------
