@@ -11,6 +11,7 @@ const {
   getSingleSection,
   deleteSection,
   updateSection,
+  searchBykeyword,
 } = require("../controller/pagesController");
 const { verifyTokenAndAdmin } = require("../middlewares/verifyToken");
 const { photoUpload } = require("../middlewares/photoUpload");

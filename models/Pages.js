@@ -1,48 +1,71 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const SectionSchema = new mongoose.Schema({
-  title: { 
-    type: String, 
+  title: {
+    type: String,
   },
-  content: { 
-    type: String 
+  content: {
+    type: String,
   },
   images: [
     {
       url: {
         type: String,
-        trim: true
+        trim: true,
       },
       description: {
-        type: String
-      }
-    }
-  ],
-  links: [
-    {
-      label: { 
-        type: String 
+        type: String,
       },
-      url: { 
-        type: String 
-      }
-    }
+      title: {
+        type: String,
+      },
+      content: {
+        type: String,
+      },
+    },
   ],
-  order: { 
-    type: Number, // لترتيب الأقسام على الصفحة
-    default: 0
-  }
+
+links: [
+    {
+      label: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
+    },
+  ],
+  order: {
+    type: Number,
+    default: 0,
+  },
 });
 
-const PageSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true, // اسم الصفحة (مثلاً: 'home', 'about')
-    unique: true
+const PageSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    sections: [SectionSchema],
   },
-  sections: [SectionSchema], // كل صفحة تحتوي على عدة أقسام
-}, { timestamps: true });
+  { timestamps: true }
+);
 
-const Page = mongoose.model('Page', PageSchema);
+// Custom pre-save validation to check for unique keywords in sections
+PageSchema.pre("save", function (next) {
+  const keywordsSet = new Set();
+  for (const section of this.sections) {
+    if (keywordsSet.has(section.keywords)) {
+      const error = new Error(`Duplicate keyword found: ${section.keywords}`);
+      return next(error);
+    }
+    keywordsSet.add(section.keywords);
+  }
+  next();
+});
 
-module.exports = {Page};
+const Page = mongoose.model("Page", PageSchema);
+
+module.exports = { Page };

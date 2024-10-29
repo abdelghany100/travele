@@ -11,34 +11,49 @@ const path = require('path');
  -------------------------------------*/
  module.exports.addOrUpdateSection = catchAsyncErrors(async (req, res, next) => {
   const { pageName } = req.params;
-  const { title, content, order } = req.body;
-  const images = req.body.images || []; // تأكد من أن images هو مصفوفة حتى إذا كان غير موجود
-  const links = req.body.links || []; // تأكد من أن links هو مصفوفة حتى إذا كان غير موجود
+  const { title, content, order, keywords } = req.body; // تأكد من أن keywords موجود
+  const images = req.body.images || [];
+  const links = req.body.links || [];
 
+  // العثور على الصفحة أو إنشائها إذا لم تكن موجودة
   let page = await Page.findOne({ name: pageName });
-
   if (!page) {
     page = new Page({ name: pageName });
   }
 
+  // إنشاء روابط الصور
   const imagesLinks = req.files.map((file, index) => ({
     url: `/images/${file.filename}`,
-    description: images[index] ? images[index].description || "" : "", 
+    description: images[index] ? images[index].description || "" : "",
+    title: images[index] ? images[index].title || "" : "",
+    content: images[index] ? images[index].content || "" : "",
   }));
 
+  // إنشاء السكشن
   const section = {
     title,
     content,
+    keywords, // إضافة الكلمات المفتاحية
     images: imagesLinks,
     links: links.map((link) => ({
       label: link.label,
       url: link.url,
-    })), 
+    })),
     order,
   };
 
-  page.sections.push(section);
+  // البحث عن السكشن باستخدام keywords
+  const existingSectionIndex = page.sections.findIndex((sec) => sec.keywords === keywords);
 
+  if (existingSectionIndex > -1) {
+    // إذا كان السكشن موجودًا، تحديثه
+    page.sections[existingSectionIndex] = { ...page.sections[existingSectionIndex], ...section };
+  } else {
+    // إذا لم يكن موجودًا، إضافته
+    page.sections.push(section);
+  }
+
+  // حفظ الصفحة
   await page.save();
 
   res.status(200).json({
@@ -47,6 +62,7 @@ const path = require('path');
     data: { page },
   });
 });
+
 
 
 
