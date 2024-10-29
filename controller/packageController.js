@@ -24,7 +24,9 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     image,
     program,
     mapImages,
-    keyword
+    keyword,
+    slug
+    
   } = req.body;
 
   const newPackage = new Package({
@@ -36,6 +38,7 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
       day: duration.day,
       nights: duration.nights,
     },
+    slug,
     keyword,
     location,
     category,
@@ -197,13 +200,13 @@ module.exports.getAllPackages = catchAsyncErrors(async (req, res, next) => {
 });
 
 /**-------------------------------------
- * @desc   Get single package by ID
+ * @desc   Get single package by slug
  * @router /api/v1/package/:id
  * @method GET
  * @access public
  -------------------------------------*/
 module.exports.getSinglePackage = catchAsyncErrors(async (req, res, next) => {
-  const package = await Package.findById(req.params.id).populate(
+  const package = await Package.findOne({slug:req.params.slug}).populate(
     "typePackages"
   );
 

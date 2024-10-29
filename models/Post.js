@@ -40,8 +40,8 @@ const PostSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
     tags: { type: [String], default: [] },
+    slug: { type: String, trim: true, unique: true },
     image: {
       type: [
         {
@@ -89,6 +89,7 @@ function validateCreatePost(obj) {
     descriptionOutSide: Joi.string().trim().min(10).required(),
     category: Joi.string().trim().required(),
     tags: Joi.array(),
+    slug: Joi.string().trim(),
   });
   return Schema.validate(obj);
 }
@@ -98,7 +99,6 @@ function validateUpdatePost(obj) {
   const Schema = Joi.object({
     title: Joi.string().trim().min(2).max(200),
     description: Joi.string().trim().min(10),
-    
   });
   return Schema.validate(obj);
 }
@@ -110,4 +110,3 @@ module.exports = {
   validateCreatePost,
   validateUpdatePost,
 };
- 

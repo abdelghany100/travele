@@ -24,9 +24,10 @@ router
 
 router
   .route("/:id")
-  .get(validateObjectid, getSinglePostsCtrl)
   .delete(validateObjectid ,verifyTokenAndAdmin ,deletePostCtrl )
   .patch(validateObjectid , verifyTokenAndAdmin ,updatePostCtr )
+
+router.route("/:slug").get( getSinglePostsCtrl)
 
 router.route("/update-image/:id")
 .patch(verifyTokenAndAdmin, photoUpload.array("images", 10), updatePostImageCtr)

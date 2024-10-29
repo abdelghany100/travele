@@ -26,8 +26,9 @@ router
 router
   .route("/:id")
   .delete(verifyTokenAndAdmin, deletePackage)
-  .get(getSinglePackage)
   .patch(verifyTokenAndAdmin , updatePackage);
+
+router.route("/:slug").get(getSinglePackage)
 router.post(
   "/image-package/:id",
   verifyTokenAndAdmin,

@@ -43,6 +43,7 @@ module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
     descriptionOutSide:req.body.descriptionOutSide,
     category:req.body.category,
     image: images,
+    slug: req.body.slug
   });
 
   res.status(201).json({
@@ -101,7 +102,7 @@ module.exports.getAllPostCtrl = catchAsyncErrors(async (req, res, next) => {
  - ------------------------------------*/
 
 module.exports.getSinglePostsCtrl = catchAsyncErrors(async (req, res, next) => {
-  const post = await Post.findById(req.params.id)
+  const post = await Post.findOne({slug: req.params.slug})
     .populate("user", ["-password"])
     .populate("comments");
   if (!post) {

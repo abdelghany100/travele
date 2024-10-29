@@ -43,6 +43,7 @@ const PackageSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    slug: { type: String, trim: true, unique: true },
     keyword: {
       type: String,
       trim: true,
@@ -70,6 +71,7 @@ const PackageSchema = new mongoose.Schema(
         required: true,
         trim: true,
       },
+
       programItem: [
         {
           day: {
@@ -107,6 +109,8 @@ const PackageSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+// PackageSchema.index({ slug: 1 }, { unique: true });
+
 PackageSchema.virtual("typePackages", {
   ref: "TypePackage",
   localField: "_id",
