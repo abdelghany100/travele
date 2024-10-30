@@ -26,7 +26,8 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     program,
     mapImages,
     keyword,
-    slug
+    slug,
+    descriptionMeta
     
   } = req.body;
 
@@ -36,6 +37,7 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     titleOutSide,
     description,
     descriptionOutSide,
+    descriptionMeta,
     duration: {
       day: duration.day,
       nights: duration.nights,

@@ -23,6 +23,11 @@ const PackageSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    descriptionMeta: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     duration: {
       day: {
         type: Number,

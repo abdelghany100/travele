@@ -50,7 +50,8 @@ const ConvertImage = require("../utils/ConvertImage");
     descriptionOutSide: req.body.descriptionOutSide,
     category: req.body.category,
     image: images,
-    slug: req.body.slug
+    slug: req.body.slug,
+    descriptionMeta:req.body.descriptionMeta
   });
 
   res.status(201).json({
