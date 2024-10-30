@@ -25,7 +25,6 @@ const PackageSchema = new mongoose.Schema(
     },
     descriptionMeta: {
       type: String,
-      required: true,
       trim: true,
     },
     duration: {

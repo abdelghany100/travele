@@ -27,7 +27,6 @@ const PostSchema = new mongoose.Schema(
     },
     descriptionMeta: {
       type: String,
-      required: true,
       trim: true,
     },
     descriptionOutSide: {
@@ -96,7 +95,7 @@ function validateCreatePost(obj) {
     titleOutSide: Joi.string().trim().min(2).max(200).required(),
     description: Joi.string().trim().min(10).required(),
     descriptionOutSide: Joi.string().trim().min(10).required(),
-    descriptionMeta: Joi.string().trim().required(),
+    descriptionMeta: Joi.string().trim(),
     category: Joi.string().trim().required(),
     tags: Joi.array(),
     slug: Joi.string().trim(),
