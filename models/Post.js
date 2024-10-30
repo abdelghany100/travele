@@ -50,6 +50,10 @@ const PostSchema = new mongoose.Schema(
             required: true,
             trim: true,
           },
+          alt: {
+            type: String,
+            required: true,
+          },
         },
       ],
       default: [],
@@ -90,6 +94,9 @@ function validateCreatePost(obj) {
     category: Joi.string().trim().required(),
     tags: Joi.array(),
     slug: Joi.string().trim(),
+    images: Joi.array().items(Joi.object({
+      alt: Joi.string().trim().required()
+    })).optional(),    
   });
   return Schema.validate(obj);
 }

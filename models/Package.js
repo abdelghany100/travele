@@ -56,6 +56,11 @@ const PackageSchema = new mongoose.Schema(
             required: true,
             trim: true,
           },
+          alt:{
+            type: String,
+            required: true,
+            trim: true,
+          }
         },
       ],
       default: [],
@@ -94,6 +99,12 @@ const PackageSchema = new mongoose.Schema(
             required: true,
             trim: true,
           },
+          alt:{
+            type: String,
+
+            required: true,
+            trim: true,
+          }
         },
       ],
       default: [],

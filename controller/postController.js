@@ -8,47 +8,54 @@ const {
 const { Comment } = require("../models/Comment");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const AppError = require("../utils/AppError");
-
+const ConvertImage = require("../utils/ConvertImage");
 /**-------------------------------------
  * @desc   Create new post
  * @router /api/v1/posts
  * @method POST
  * @access private(only admin)
  -------------------------------------*/
-
-module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
-  // 1. validation for image
+ module.exports.createPostCtrl = catchAsyncErrors(async (req, res, next) => {
+  // 1. Validation for image
   if (!req.files || req.files.length === 0) {
     return next(new AppError("No images provided", 400));
   }
 
-  // 2. validation for data
+  // 2. Validation for data
   const { error } = validateCreatePost(req.body);
   
   if (error) {
-    return next(new AppError(`${error.details[0].message} `, 400));
+    return next(new AppError(`${error.details[0].message}`, 400));
   }
 
   // 3. Upload photo
-  const images = req.files.map((file) => ({
-    url: `/images/${file.filename}`,
-  }));  //   const result = await cloudinaryUploadImage(imagePath);
-  // 4. Create new post and save to DB
+  const images = req.files.map((file, index) => {
+    // Check if req.body.images exists and has the appropriate index
+    const altText = (req.body.images && req.body.images[index] && req.body.images[index].alt) || "";
+
+    ConvertImage(file.filename, altText);
+
+    return {
+      url: `/images/${ConvertImage(file.filename, altText)}`,
+      alt: altText,
+    };
+  });
+
   const post = await Post.create({
     title: req.body.title,
     description: req.body.description,
     tags: req.body.tags || [],
     user: req.user.id,
-    titleOutSide:req.body.titleOutSide,
-    descriptionOutSide:req.body.descriptionOutSide,
-    category:req.body.category,
+    titleOutSide: req.body.titleOutSide,
+    descriptionOutSide: req.body.descriptionOutSide,
+    category: req.body.category,
     image: images,
     slug: req.body.slug
   });
 
   res.status(201).json({
     status: "SUCCESS",
-    message: "post created  successfully",
+    message: "Post created successfully",
     length: post.length,
     data: { post },
   });

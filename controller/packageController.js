@@ -3,6 +3,7 @@ const AppError = require("../utils/AppError");
 const { Package, TypePackage } = require("../models/Package");
 const fs = require("fs");
 const path = require("path");
+const ConvertImage = require("../utils/ConvertImage");
 /**-------------------------------------
  * @desc   Create new package
  * @router /api/v1/package
@@ -28,6 +29,7 @@ module.exports.createPackageCtrl = catchAsyncErrors(async (req, res, next) => {
     slug
     
   } = req.body;
+
 
   const newPackage = new Package({
     title,
@@ -75,9 +77,18 @@ module.exports.createImagePackageCtrl = catchAsyncErrors(
     if (!package) {
       return next(new AppError("Package Not Found", 404));
     }
-    const images = req.files.map((file) => ({
-      url: `/images/${file.filename}`,
-    }));
+    // 3. Upload photo
+    const images = req.files.map((file, index) => {
+      // Check if req.body.images exists and has the appropriate index
+      const altText = (req.body.images && req.body.images[index] && req.body.images[index].alt) || "";
+  
+      ConvertImage(file.filename, altText);
+  
+      return {
+        url: `/images/${ConvertImage(file.filename, altText)}`,
+        alt: altText,
+      };
+    });
     const updatedImage = await Package.findByIdAndUpdate(
       req.params.id,
       {
@@ -125,10 +136,17 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
     return next(new AppError("Package Not Found", 404));
   }
 
-  // إضافة الصور الجديدة
-  const images = req.files.map((file) => ({
-    url: `/images/${file.filename}`,
-  }));
+  const images = req.files.map((file, index) => {
+    // Check if req.body.images exists and has the appropriate index
+    const altText = (req.body.images && req.body.images[index] && req.body.images[index].alt) || "";
+
+    ConvertImage(file.filename, altText);
+
+    return {
+      url: `/images/${ConvertImage(file.filename, altText)}`,
+      alt: altText,
+    };
+  });
 
   const updatedImage = await Package.findByIdAndUpdate(
     req.params.id,

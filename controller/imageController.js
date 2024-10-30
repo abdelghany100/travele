@@ -2,6 +2,7 @@ const catchAsyncErrors = require("../utils/catchAsyncErrors");
 
 const path = require("path");
 const fs = require("fs");
+const ConvertImage = require("../utils/ConvertImage");
 
 module.exports.insertImage = catchAsyncErrors(async (req, res, next) => {
   if (!req.file) {
@@ -11,7 +12,7 @@ module.exports.insertImage = catchAsyncErrors(async (req, res, next) => {
     });
   }
 
-  const imageUrl = `/imagesBlogs/${req.file.filename}`;
+  const imageUrl = `/imagesBlogs/${ConvertImage(req.file.filename , req.body.alt)}`;
 
   res.status(200).json({
     success: true,
