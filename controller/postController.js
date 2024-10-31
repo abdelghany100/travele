@@ -8,7 +8,6 @@ const {
 const { Comment } = require("../models/Comment");
 const catchAsyncErrors = require("../utils/catchAsyncErrors");
 const AppError = require("../utils/AppError");
-const ConvertImage = require("../utils/ConvertImage");
 /**-------------------------------------
  * @desc   Create new post
  * @router /api/v1/posts
@@ -33,10 +32,9 @@ const ConvertImage = require("../utils/ConvertImage");
     // Check if req.body.images exists and has the appropriate index
     const altText = (req.body.images && req.body.images[index] && req.body.images[index].alt) || "";
 
-    ConvertImage(file.filename, altText);
 
     return {
-      url: `/images/${ConvertImage(file.filename, altText)}`,
+      url: `/images/${file.filename}`,
       alt: altText,
     };
   });

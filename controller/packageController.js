@@ -84,10 +84,9 @@ module.exports.createImagePackageCtrl = catchAsyncErrors(
       // Check if req.body.images exists and has the appropriate index
       const altText = (req.body.images && req.body.images[index] && req.body.images[index].alt) || "";
   
-      ConvertImage(file.filename, altText);
   
       return {
-        url: `/images/${ConvertImage(file.filename, altText)}`,
+        url: `/images/${file.filename}`,
         alt: altText,
       };
     });
@@ -142,10 +141,9 @@ module.exports.createImageMapCtrl = catchAsyncErrors(async (req, res, next) => {
     // Check if req.body.images exists and has the appropriate index
     const altText = (req.body.images && req.body.images[index] && req.body.images[index].alt) || "";
 
-    ConvertImage(file.filename, altText);
 
     return {
-      url: `/images/${ConvertImage(file.filename, altText)}`,
+      url: `/images/${file.filename}`,
       alt: altText,
     };
   });

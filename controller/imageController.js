@@ -12,7 +12,7 @@ module.exports.insertImage = catchAsyncErrors(async (req, res, next) => {
     });
   }
 
-  const imageUrl = `/imagesBlogs/${ConvertImage(req.file.filename , req.body.alt)}`;
+  const imageUrl = `/imagesBlogs/${req.file.filename}`;
 
   res.status(200).json({
     success: true,
